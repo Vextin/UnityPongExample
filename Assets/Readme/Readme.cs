@@ -3,6 +3,36 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
+
+
+
+
+
+
+
+
+
+
+
+//Hi! This is the script that generates the readme asset on the /Assets/ folder.
+//If you lost your copy, in the top left of the Unity window, click on Assets->Create->Readme
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 [CustomEditor(typeof(Readme))]
 [CreateAssetMenu()]
 public class Readme : Editor
@@ -78,5 +108,12 @@ public class Readme : Editor
         EditorGUILayout.LabelField(" Stores the team that owns it, and returns that information to whoever asks for it.", regular, options);   
         EditorGUILayout.Space(30f);
 
+        EditorGUILayout.LabelField("BlinkText", header2, options);   
+        EditorGUILayout.LabelField(" Makes the TextMeshPro component of the object this script is attached to blink.", regular, options);   
+        EditorGUILayout.Space(30f);
+
+        EditorGUILayout.LabelField("MainMenu", header2, options);   
+        EditorGUILayout.LabelField(" Manages functionality of the main menu, including functions for the Play and Quit buttons.", regular, options);   
+        EditorGUILayout.Space(30f);
     }
 }
