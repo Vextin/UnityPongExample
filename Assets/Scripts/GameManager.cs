@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
 
@@ -26,6 +27,8 @@ public class GameManager : MonoBehaviour
     static int teamLeftPoints = 0;
     //how many points the team on the right has
     static int teamRightPoints = 0;
+    //The paddles corresponding to Player 1 (left) and Player 2 (right)
+    static Paddle player1, player2;
 
     //The prefabricated Ball GameObject. Note that the static variable "prefab" a few lines down
     //gets its value from this, non-static, inspector-assignable variable. 
@@ -82,13 +85,52 @@ public class GameManager : MonoBehaviour
     {
         //set the static version of the prefab to the one we set in the inspector.
         prefab = ballPrefab;
-        //Get a reference to the score text - it's the only TextMeshPro component in the scene.
-        scoreText = FindObjectOfType<TextMeshProUGUI>();
+        //Get a reference to the score text
+        scoreText = GameObject.FindGameObjectWithTag("ScoreText").GetComponent<TextMeshProUGUI>();
         //And look in the scoreText's parent object for a child with a particle system component. 
         particleSystem = scoreText.transform.parent.GetComponentInChildren<ParticleSystem>();
+
+        player1 = GameObject.FindObjectOfType<PlayerPaddle>();
+        player2 = GameObject.FindObjectOfType<AIPaddle>();
 
         SpawnNewBall();
     }
 
+    void Update()
+    {
+        if(!playerTwoIsHuman)
+        {
+            if(Input.GetKeyDown(KeyCode.Return))
+            {
+                player2 = player2.SwapControlMethod();
+                RestartGame();
+            }
+        }else
+        {
+            if(Input.GetKeyDown(KeyCode.Backspace))
+            {
+                player2 = player2.SwapControlMethod();
+                RestartGame();
+            }
+        }    
+
+        if(Input.GetKeyDown(KeyCode.Escape))
+        {
+            SceneManager.LoadScene("MainMenu", LoadSceneMode.Single);
+        }
+    }
+    public static void RestartGame()
+    {
+        ResetScoreboard();
+    }
     public static GameObject GetBall(){ return ball; }
+
+    //If a player joins, call this with isHuman=true. If the player leaves, call it, but with isHuman=false.
+
+    static void ResetScoreboard()
+    {
+        teamLeftPoints = 0;
+        teamRightPoints = 0;
+        scoreText.text = "0 - 0";
+    }
 }

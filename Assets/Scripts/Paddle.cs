@@ -6,7 +6,7 @@ public class Paddle : MonoBehaviour
 {
     //Private/Protected variables cannot be edited or seen by other scripts, or other instances of this script.
     //SerializeField lets us edit the variables in the inspector even if they are private.
-    [SerializeField] protected float moveSpeed = 1.0f;   //how fast the player moves in units per second.
+    [SerializeField] protected float moveSpeed = 2.0f;   //how fast the player moves in units per second.
     [SerializeField] protected float maxDistance = 3.0f; //the maximum distance the player can travel up or down.
 
     //Movement Amount is how much the player will move this frame:
@@ -36,5 +36,26 @@ public class Paddle : MonoBehaviour
         //A Vector3 is an X, Y, and Z. We tell the X and Z to stay as they were, but
         //We replace our Y position with the one we just calculated. 
         transform.position = new Vector3(transform.position.x, position, transform.position.z);
+    }
+
+
+    //Swaps the control method between AI-controlled and Player-controlled.
+    public virtual Paddle SwapControlMethod()
+    {
+        Paddle newPaddle;
+        if(GameManager.playerTwoIsHuman)
+        {
+            newPaddle = gameObject.AddComponent<AIPaddle>();
+        } else
+        {
+            newPaddle = gameObject.AddComponent<PlayerPaddle>();
+        }
+        
+        GameManager.playerTwoIsHuman = !GameManager.playerTwoIsHuman;
+        //Removes this component from the object
+        //BUT doesn't actually delete it until the end of the frame, so we can still return the new paddle component.
+        Destroy(this);
+
+        return newPaddle;
     }
 }

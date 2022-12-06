@@ -6,20 +6,8 @@ public class AIPaddle : Paddle
 {
     //how much the AI should lag behind in its decision making
     //Values over 1 will always intentionall miss
-    
+
     [SerializeField][Range(-1f,1f)] float handicap = 0f;
-    //Start is called on the first frame
-    void Start()
-    {
-        //Ask the game manager if there is a second human playing
-        if(GameManager.playerTwoIsHuman)
-        {
-            //if there is, add a PlayerPaddle component
-            gameObject.AddComponent<PlayerPaddle>();
-            //and delete the AIPaddle component from the object.
-            Destroy(this);
-        }
-    }
 
     void Update ()
     {
