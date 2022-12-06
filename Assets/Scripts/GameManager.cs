@@ -29,6 +29,7 @@ public class GameManager : MonoBehaviour
     static int teamRightPoints = 0;
     //The paddles corresponding to Player 1 (left) and Player 2 (right)
     static Paddle player1, player2;
+    static Vector3 player1StartPos, player2StartPos;
 
     //The prefabricated Ball GameObject. Note that the static variable "prefab" a few lines down
     //gets its value from this, non-static, inspector-assignable variable. 
@@ -72,6 +73,8 @@ public class GameManager : MonoBehaviour
 
     static void SpawnNewBall()
     {
+        if(ball != null)
+            Destroy(ball);
         //Instantiate creates a clone of a GameObject.
         //The thing we clone is prefab (the ball)
         //The new object's position is (0,0,0) or the center of the screen.
@@ -90,19 +93,31 @@ public class GameManager : MonoBehaviour
         //And look in the scoreText's parent object for a child with a particle system component. 
         particleSystem = scoreText.transform.parent.GetComponentInChildren<ParticleSystem>();
 
+        //Get references to both of the paddles.
         player1 = GameObject.FindObjectOfType<PlayerPaddle>();
         player2 = GameObject.FindObjectOfType<AIPaddle>();
+
+        //And keep note of where the players started. We could hard-code these numbers,
+        //but that makes it harder to change the level design later.
+        player1StartPos = player1.transform.position;
+        player2StartPos = player2.transform.position;
 
         SpawnNewBall();
     }
 
     void Update()
     {
+        //The following code handles switching between AI and Human for Player 2.
+        //Note: ! (exclamation) means "not". So this if statement reads:
+        //"If player two is NOT human"
         if(!playerTwoIsHuman)
         {
+            //If player 2 is AI, and the player hits "Enter" on the keyboard,
             if(Input.GetKeyDown(KeyCode.Return))
             {
+                //tell the AI paddle to swap its control method.
                 player2 = player2.SwapControlMethod();
+                //Restart the game.
                 RestartGame();
             }
         }else
@@ -122,11 +137,15 @@ public class GameManager : MonoBehaviour
     public static void RestartGame()
     {
         ResetScoreboard();
+        SpawnNewBall();
+
+        //Reset player locations.
+        player1.transform.position = player1StartPos;
+        player2.transform.position = player2StartPos;
     }
+
+    //Just gives whoever called it a reference to the ball object.
     public static GameObject GetBall(){ return ball; }
-
-    //If a player joins, call this with isHuman=true. If the player leaves, call it, but with isHuman=false.
-
     static void ResetScoreboard()
     {
         teamLeftPoints = 0;

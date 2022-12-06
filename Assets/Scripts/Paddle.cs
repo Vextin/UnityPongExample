@@ -14,6 +14,9 @@ public class Paddle : MonoBehaviour
     //Holding S results in a negative value - that means "down"
     protected float movementAmount = 0;
 
+    //movementAmount is protected, which means other scripts can't read or change it.
+    //We do want other scripts to know our movement, though.
+    //A public "getter" function lets other scripts ask for, but not change, the value of movementAmount.
     public float GetMovementAmount()
     {
         return movementAmount;
@@ -42,20 +45,28 @@ public class Paddle : MonoBehaviour
     //Swaps the control method between AI-controlled and Player-controlled.
     public virtual Paddle SwapControlMethod()
     {
+        //declare a new paddle. It doesn't have an actual paddle yet, we're just "promising"
+        //that we will create one.
         Paddle newPaddle;
+        
         if(GameManager.playerTwoIsHuman)
         {
+            //If the player was human, make an AI paddle.
             newPaddle = gameObject.AddComponent<AIPaddle>();
         } else
         {
+            //if the player was AI, make a player paddle.
             newPaddle = gameObject.AddComponent<PlayerPaddle>();
         }
-        
+
+        //exclamation (!) means "not". This statement swaps the value of playerTwoIsHuman.
         GameManager.playerTwoIsHuman = !GameManager.playerTwoIsHuman;
+
         //Removes this component from the object
         //BUT doesn't actually delete it until the end of the frame, so we can still return the new paddle component.
         Destroy(this);
 
+        //Give the new paddle back to the game manager, or whoever else called the function.
         return newPaddle;
     }
 }
