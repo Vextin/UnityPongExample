@@ -5,9 +5,9 @@ using UnityEngine;
 public class PlayerPaddle : Paddle
 {
     //Look at the line above - the class declaration.
-    //it reads "public class Controls is-a Paddle.
+    //it reads "public class PlayerPaddle is-a Paddle."
     //That means all of the variables and functions 
-    //in Paddle are also part of Controls. 
+    //in Paddle are also part of PlayerPaddle. 
     //Read Paddle before we get started for extra context.
     //Note: the AIPaddle script is also a Paddle.
     
